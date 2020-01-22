@@ -68,6 +68,28 @@ const WorkflowManager = class WorkflowManager {
   clear() {
     this.workflows = [];
   }
+
+  // Used by the Sandbox
+  getRawFromCanonical(canonical) {
+    return this.workflows.find((w) => w.canonical === canonical);
+  }
+
+  // Used by the Sandbox
+  alias(canonical, alias) {
+    const originWorkflow = this.getRawFromCanonical(canonical);
+    if (!originWorkflow) {
+      throw new Error(
+        `Cannot find any workflow matching canonical name ${canonical}`,
+      );
+    }
+
+    this.workflows.push({
+      name: alias,
+      canonical: alias,
+      version: originWorkflow.version,
+      class: originWorkflow.class,
+    });
+  }
 };
 
 module.exports = new WorkflowManager();
